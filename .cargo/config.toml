@@ -1,0 +1,5 @@
+# 裸机固件禁用宿主仓 +aes 注入与全局 sccache 包装：
+# aes 依赖 neon，与软浮点约束冲突；sccache 单线程队列在宿主重负载下死等
+[build]
+rustflags = ["-C", "target-cpu=generic"]
+rustc-wrapper = ""

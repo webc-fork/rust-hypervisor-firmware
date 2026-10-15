@@ -11,7 +11,7 @@ use crate::layout::{MemoryAttribute, MemoryDescriptor, MemoryLayout};
 
 use super::paging::*;
 
-extern "Rust" {
+unsafe extern "Rust" {
     static code_start: UnsafeCell<()>;
     static code_end: UnsafeCell<()>;
     static data_start: UnsafeCell<()>;

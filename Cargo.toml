@@ -2,7 +2,10 @@
 name = "hypervisor-fw"
 version = "0.5.0"
 authors = ["The Rust Hypervisor Firmware Authors"]
-edition = "2021"
+edition = "2024"
+
+# 独立固件工程，禁止被上级 osfree 工作区吸收
+[workspace]
 
 # Despite "panic-strategy": "abort" being set in x86_64-unknown-none.json, panic = "abort" is
 # needed here to make "cargo check" and "cargo clippy" run without errors.
@@ -11,7 +14,10 @@ panic = "abort"
 
 [profile.release]
 panic = "abort"
-lto = "thin"
+lto = "fat"
+codegen-units = 1
+opt-level = 3
+strip = true
 
 [features]
 default = ["log-serial", "log-panic"]
@@ -26,11 +32,11 @@ coreboot = []
 efi-var = []
 
 [dependencies]
-bitflags = "2.13.0"
+bitflags = "2.13.2"
 atomic_refcell = "0.1.14"
-r-efi = { version = "5.3.0", features = ["efiapi"] }
+r-efi = { version = "7.1.0", default-features = false }
 heapless = "0.9.3"
-log = "0.4.32"
+log = "0.4.34"
 
 [target.'cfg(target_arch = "aarch64")'.dependencies]
 tock-registers = "0.10.1"
@@ -39,8 +45,8 @@ fdt = "0.1.5"
 chrono = { version = "0.4", default-features = false }
 
 [target.'cfg(target_arch = "x86_64")'.dependencies]
-uart_16550 = "0.8.0"
-x86_64 = { version = "0.15.4", default-features = false, features = [
+uart_16550 = "0.8.1"
+x86_64 = { version = "0.15.5", default-features = false, features = [
     "instructions",
 ] }
 
@@ -50,6 +56,6 @@ fdt = "0.1.5"
 
 [dev-dependencies]
 dirs = "7.0.0"
-rand = "0.10.1"
-ssh2 = { version = "0.9.5", features = ["vendored-openssl"] }
+rand = "0.10.3"
+ssh2 = { version = "0.9.6", features = ["vendored-openssl"] }
 tempfile = "3.27.0"
